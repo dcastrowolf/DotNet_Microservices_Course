@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PlatformService.AsyncDataServices;
+using PlatformService.Config;
 using PlatformService.Data;
 using PlatformService.SyncDataServices.Grpc;
 using PlatformService.SyncDataServices.Http;
@@ -49,6 +50,7 @@ namespace PlatformService
             }
 
             services.AddScoped<IPlatformRepo, PlatformRepo>();
+            services.Configure<RabbitMQOptions>(opt => Configuration.GetSection("RabbitMQSettings").Bind(opt));
 
             services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
             services.AddSingleton<IMessageBusClient, MessageBusClient>();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommandsService.AsyncDataServices;
+using CommandsService.Config;
 using CommandsService.Data;
 using CommandsService.EventProcessing;
 using CommandsService.SyncDataServices.Grpc;
@@ -32,6 +33,7 @@ namespace CommandsService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMen"));
+            services.Configure<RabbitMQOptions>(opt => Configuration.GetSection("RabbitMQSettings").Bind(opt));
             services.AddScoped<ICommandRepo, CommandRepo>();
             services.AddControllers();
 
