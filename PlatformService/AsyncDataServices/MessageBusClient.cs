@@ -2,6 +2,8 @@ using System;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using PlatformService.Config;
 using PlatformService.Dtos;
 using RabbitMQ.Client;
 
@@ -9,17 +11,17 @@ namespace PlatformService.AsyncDataServices
 {
     public class MessageBusClient : IMessageBusClient
     {
-        private readonly IConfiguration _configuration;
+        private readonly RabbitMQOptions _rabbitmqOptions;
         private readonly IConnection _connection;
         private readonly IModel _channel;
 
-        public MessageBusClient(IConfiguration configuration)
+        public MessageBusClient(IOptions<RabbitMQOptions> options)
         {
-            _configuration = configuration;
+            _rabbitmqOptions = options.Value;
             var factory = new ConnectionFactory()
             {
-                HostName = _configuration["RabbitMQHost"],
-                Port = int.Parse(_configuration["RabbitMQPort"])
+                HostName = _rabbitmqOptions.Host,
+                Port = _rabbitmqOptions.Port
             };
             try
             {
